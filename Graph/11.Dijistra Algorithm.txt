@@ -1,0 +1,47 @@
+#include<bits/stdc++.h> 
+using namespace std; 
+
+#define V 4
+
+vector<int> dijkistra(int graph[V][V],int src){
+    vector<int>distance(V,INT_MAX);
+    distance[src]=0;
+    vector<bool>visited(V,false);
+    
+    for(int i=0;i<V;i++){
+        int u=-1;
+        
+        for(int i=0; i<V;i++)
+            if(visited[i]==false && ((u==-1) || (distance[i]<distance[u])) ) u=i;
+        
+        visited[u]=true;
+        
+        for(int v=0;v<V;v++){
+            
+            if(visited[v]==false && graph[u][v] != 0)
+                distance[v]=min(distance[v],distance[u]+graph[u][v]);
+        }
+    }
+    
+    return distance;
+}
+
+
+void addEdge(vector<int> adj[], int u, int v){
+    adj[u].push_back(v);
+}
+
+int main() 
+{ 
+	int graph[V][V] = { { 0, 50, 100, 0}, 
+						{ 50, 0, 30, 200 }, 
+						{ 100, 30, 0, 20 }, 
+						{ 0, 200, 20, 0 },}; 
+
+	for(int x: dijkistra(graph,0)){
+	    cout<<x<<" ";
+	} 
+	
+
+	return 0; 
+} 
