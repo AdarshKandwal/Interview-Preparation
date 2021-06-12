@@ -1,0 +1,77 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define nil -1
+
+class graph
+{
+public:
+int V;
+list<int> *adj;
+void ArticulationPoint(int source,vector<bool> &visited,vector<int> &parent,vector<int> &low,vector<int> &discovery,vector<bool> &ap);
+graph(int V);
+void addEdge(int source, int destination);
+void ArticulationPointHelper();
+};
+
+graph::graph(int V){
+    this->V=V;
+    adj=new list<int>[V];
+}
+
+void graph::addEdge(int source, int destination) 
+{ 
+	adj[source].push_back(destination); 
+	adj[source].push_back(destination); 
+} 
+
+void graph::ArticulationPoint(int source,vector<bool> &visited,vector<int> &parent,vector<int> &low,vector<int> &discovery,vector<bool> &ap){
+    
+    int children=0;
+    visited[source]=true;
+    static int times=0;
+    discovery[source]=low[source]=++times;
+    for(int x:adj[source]){
+        if(!visited[x]){
+            children++;
+            parent[x]=source;
+            ArticulationPoint(x,visited,parent,low,discovery,ap);
+            low[source]=min(low[source],low[x]);
+            if(parent[source]==nil && children>1)
+                ap[source]=true;
+            if(parent[source]!=nil && low[x]>discovery[source])
+                ap[source]=true;
+        }
+        
+        else if(x != parent[source])
+         low[source]=min(low[source],discovery[x]);
+    }
+    
+}
+
+void graph::ArticulationPointHelper(){
+    vector<int> parent(V,nil);
+    vector<bool>visited(V,false);
+    vector<bool>ap(V,false);
+    vector<int>low(V,0);
+    vector<int>discovery(V,0);
+    for(int i=0;i<V;i++)
+        if(!visited[i])
+            ArticulationPoint(i,visited,parent,low,discovery,ap);
+            
+	for (int i = 0; i < V; i++) 
+	    if (ap[i] == true) 
+		    cout << i << " "; 
+}
+int main()
+{   
+    cout << "Articulation points in first graph \n";
+	graph g(5); 
+	g.addEdge(1, 0); 
+	g.addEdge(0, 2); 
+	g.addEdge(2, 1); 
+	g.addEdge(0, 3); 
+	g.addEdge(3, 4); 
+	g.ArticulationPointHelper(); 
+	
+	return 0; 
+}
