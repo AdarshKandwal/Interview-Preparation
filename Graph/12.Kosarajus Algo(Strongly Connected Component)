@@ -1,0 +1,83 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class graph{
+public:
+    int V;
+    list<int> *adj; 
+    void DfsRecStk(vector<bool> &visited ,int source,stack<int> &s);
+    void DfsSimple(vector<bool> &visited,int source);
+    graph(int V);
+    void addEdge(int source,int destination);
+    void Doitall();
+    graph getTranspose();
+};
+
+graph::graph(int V){
+    this->V= V;
+    adj = new list<int>[V]; 
+}
+
+void graph::addEdge(int source,int destination){
+    adj[source].push_back(destination);
+}
+
+void graph::DfsSimple(vector<bool> &visited,int source){
+    visited[source]=true;
+    cout<<source;
+    for(int x : adj[source])
+        if(!visited[x])
+            DfsSimple(visited,x);
+}
+
+void graph::DfsRecStk(vector<bool> &visited ,int source,stack<int> &st){
+    visited[source]=true;
+    for(int x :adj[source])
+        if(!visited[x])
+            DfsRecStk(visited,x,st);
+    cout<<source;
+    st.push(source);
+}
+
+graph graph::getTranspose(){
+    graph g1(V);
+    for(int v=0;v<V;v++){
+        for(int x : adj[v])
+            g1.adj[x].push_back(v);
+    }
+return g1;
+
+}
+
+void graph::Doitall(){
+    stack<int> s;
+    vector<bool> visited(V,false);
+    for(int i=0;i<V;i++)
+        if(visited[i]==false)
+            DfsRecStk(visited,i,s);
+            
+    graph g=getTranspose();
+    vector<bool> visited2(V,false);
+    while(s.empty()==false)
+    {
+        int v=s.top();
+        s.pop();
+        if(visited2[v]==false)
+            g.DfsSimple(visited2,v),cout<<endl;
+    }
+}
+int main() 
+{ 
+    graph g(5); 
+	g.addEdge(1, 0); 
+	g.addEdge(0, 2); 
+	g.addEdge(2, 1); 
+	g.addEdge(0, 3); 
+	g.addEdge(3, 4);
+	cout << "Following are strongly connected components in given graph \n"; 
+	g.Doitall(); 
+
+	return 0; 
+} 
+
+
