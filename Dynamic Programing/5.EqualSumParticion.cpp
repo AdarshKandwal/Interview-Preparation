@@ -6,7 +6,7 @@ bool subsetSum(int arr[],int n,int sum,vector<vector<bool>> &t){
     
    for (int i = 0; i < n+1; i++)
         t[i][0] = true;
-   for (int i = 0; i <sum+1; i++)
+   for (int i = 1; i <sum+1; i++)
         t[0][i] = false;
         
    for(int i=1;i<n+1;i++){
